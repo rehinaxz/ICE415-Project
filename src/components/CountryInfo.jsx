@@ -1,265 +1,204 @@
-import { useState, useEffect } from 'react';
+import { Users, Landmark, Globe2, Map, X, Star, TrendingUp, Calendar } from "lucide-react";
 
 export default function CountryInfo({ country, onClose }) {
-  const [countryData, setCountryData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (country) {
-      fetchCountryData(country);
-    }
-  }, [country]);
-
-  const fetchCountryData = async (country) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      let response;
-      let apiUrl;
-      
-      console.log('Fetching data for country:', country); // Debug log
-      
-      // Try multiple methods to find the country
-      if (country.cca3 && country.cca3 !== '-99') {
-        // First try with 3-letter country code
-        apiUrl = `https://restcountries.com/v3.1/alpha/${country.cca3}`;
-        response = await fetch(apiUrl);
-        console.log('Trying with cca3:', country.cca3, 'Status:', response.status);
-      }
-      
-      if (!response || !response.ok) {
-        // Try with 2-letter country code
-        if (country.cca2 && country.cca2 !== '-99') {
-          apiUrl = `https://restcountries.com/v3.1/alpha/${country.cca2}`;
-          response = await fetch(apiUrl);
-          console.log('Trying with cca2:', country.cca2, 'Status:', response.status);
-        }
-      }
-      
-      if (!response || !response.ok) {
-        // Try with country name (partial match)
-        if (country.name) {
-          apiUrl = `https://restcountries.com/v3.1/name/${encodeURIComponent(country.name)}`;
-          response = await fetch(apiUrl);
-          console.log('Trying with name (partial):', country.name, 'Status:', response.status);
-        }
-      }
-      
-      if (!response || !response.ok) {
-        // Try with country name (exact match)
-        if (country.name) {
-          apiUrl = `https://restcountries.com/v3.1/name/${encodeURIComponent(country.name)}?fullText=true`;
-          response = await fetch(apiUrl);
-          console.log('Trying with name (exact):', country.name, 'Status:', response.status);
-        }
-      }
-      
-      if (!response || !response.ok) {
-        throw new Error(`Country "${country.name || country.cca3 || country.cca2}" not found in REST Countries API`);
-      }
-      
-      const data = await response.json();
-      console.log('Successfully fetched country data:', data[0]); // Debug log
-      setCountryData(data[0]);
-    } catch (err) {
-      console.error('Error fetching country data:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!country) return null;
 
   return (
-    <div className="fixed top-6 right-6 w-96 bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-slate-700/50 shadow-2xl z-50 animate-in slide-in-from-right duration-300">
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-white">{country.name}</h2>
-            <p className="text-slate-300 text-sm mt-1">Country Information</p>
+    <div className="w-full max-w-full bg-slate-900/95 backdrop-blur-xl border border-slate-600 rounded-2xl shadow-2xl overflow-hidden relative animate-slide-in">
+      {/* Close Button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-10 p-2 rounded-full bg-slate-800/90 hover:bg-slate-700/90 transition-all duration-200 hover:scale-110"
+        >
+          <X className="w-5 h-5 text-white" />
+        </button>
+      )}
+      
+      {/* Flag */}
+      <div className="w-full h-36 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
+        <img
+          src={country.flags?.png}
+          alt={`${country.name.common} flag`}
+          className="w-full h-full object-cover relative z-10"
+        />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+      </div>
+
+      {/* Header */}
+      <div className="p-3 text-center bg-gradient-to-br from-slate-800/50 to-slate-900/50 relative">
+        <div className="absolute top-4 left-4 flex items-center gap-2">
+          <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-xs text-green-400 font-medium">Live Data</span>
+        </div>
+        <h2 className="text-2xl font-bold text-white mb-2">{country.name.common}</h2>
+        <p className="text-slate-400 text-sm leading-relaxed">{country.name.official}</p>
+        <div className="mt-3 flex justify-center gap-2">
+          <div className="px-3 py-1 bg-blue-500/20 rounded-full">
+            <span className="text-blue-400 text-xs font-medium">{country.region}</span>
           </div>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800/50 rounded-lg"
-            title="Close"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          {country.subregion && (
+            <div className="px-3 py-1 bg-purple-500/20 rounded-full">
+              <span className="text-purple-400 text-xs font-medium">{country.subregion}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Info Grid */}
+      <div className="px-3 py-3 space-y-2">
+        {/* Capital */}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-indigo-500/20 rounded-lg">
+              <Landmark className="w-5 h-5 text-indigo-400" />
+            </div>
+            <span className="font-semibold text-slate-300">Capital</span>
+          </div>
+          <p className="text-white text-lg font-medium">{country.capital?.[0] || "N/A"}</p>
+          {country.capital && country.capital.length > 1 && (
+            <p className="text-slate-400 text-sm mt-1">
+              +{country.capital.length - 1} more capital{country.capital.length > 2 ? 's' : ''}
+            </p>
+          )}
         </div>
 
-        {/* Loading State */}
-        {loading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="flex flex-col items-center gap-3">
-              <div className="animate-spin rounded-full h-10 w-10 border-2 border-slate-600 border-t-blue-500"></div>
-              <span className="text-slate-300 text-sm font-medium">Loading country data...</span>
+        {/* Population */}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-pink-500/20 rounded-lg">
+              <Users className="w-5 h-5 text-pink-400" />
             </div>
+            <span className="font-semibold text-slate-300">Population</span>
+          </div>
+          <p className="text-white text-lg font-medium">
+            {country.population?.toLocaleString() || "N/A"}
+          </p>
+          {country.population && country.population > 1000000000 && (
+            <div className="flex items-center gap-1 mt-1">
+              <TrendingUp className="w-3 h-3 text-green-400" />
+              <span className="text-green-400 text-xs font-medium">Billion+</span>
+            </div>
+          )}
+        </div>
+
+        {/* Area */}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-green-500/20 rounded-lg">
+              <Globe2 className="w-5 h-5 text-green-400" />
+            </div>
+            <span className="font-semibold text-slate-300">Area</span>
+          </div>
+          <p className="text-white text-lg font-medium">
+            {country.area?.toLocaleString() || "N/A"} km²
+          </p>
+          {country.area && country.area > 1000000 && (
+            <div className="flex items-center gap-1 mt-1">
+              <Star className="w-3 h-3 text-yellow-400" />
+              <span className="text-yellow-400 text-xs font-medium">Large Country</span>
+            </div>
+          )}
+        </div>
+
+        {/* Region */}
+        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-yellow-500/20 rounded-lg">
+              <Map className="w-5 h-5 text-yellow-400" />
+            </div>
+            <span className="font-semibold text-slate-300">Region</span>
+          </div>
+          <p className="text-white text-lg font-medium">{country.region || "N/A"}</p>
+        </div>
+
+        {/* Additional Information */}
+        {country.subregion && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <Map className="w-5 h-5 text-blue-400" />
+              </div>
+              <span className="font-semibold text-slate-300">Subregion</span>
+            </div>
+            <p className="text-white text-lg font-medium">{country.subregion}</p>
           </div>
         )}
 
-        {/* Error State */}
-        {error && (
-          <div className="bg-red-900/20 border border-red-800/50 rounded-xl p-4 text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-              <span className="text-red-300 font-medium">Error</span>
+        {country.currencies && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <span className="text-2xl">💰</span>
+              </div>
+              <span className="font-semibold text-slate-300">Currency</span>
             </div>
-            <p className="text-red-200 text-sm">{error}</p>
+            <p className="text-white text-lg font-medium">
+              {Object.values(country.currencies)[0]?.name || "N/A"}
+            </p>
           </div>
         )}
 
-        {/* Country Data */}
-        {countryData && (
-          <div className="space-y-6 text-white">
-            {/* Flag */}
-            <div className="flex justify-center mb-6">
-              <div className="relative bg-slate-800/30 rounded-xl p-3 border border-slate-700/50">
-                <img
-                  src={countryData.flags?.png}
-                  alt={`${countryData.name?.common} flag`}
-                  className="w-24 h-16 object-contain rounded-lg border border-slate-600/30 shadow-md"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-                {countryData.coatOfArms?.png && (
-                  <img
-                    src={countryData.coatOfArms.png}
-                    alt={`${countryData.name?.common} coat of arms`}
-                    className="absolute -bottom-1 -right-1 w-6 h-6 object-contain bg-slate-800 rounded-full p-0.5 border border-slate-600"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                )}
+        {country.languages && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-orange-500/20 rounded-lg">
+                <span className="text-2xl">🗣️</span>
               </div>
+              <span className="font-semibold text-slate-300">Language</span>
             </div>
-
-            {/* Basic Info */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Official Name</span>
-                <p className="font-semibold text-white mt-1">{countryData.name?.official}</p>
-              </div>
-              <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Capital</span>
-                <p className="font-semibold text-white mt-1">{countryData.capital?.[0] || 'N/A'}</p>
-              </div>
-              <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Population</span>
-                <p className="font-semibold text-white mt-1">
-                  {countryData.population?.toLocaleString() || 'N/A'}
-                </p>
-              </div>
-              <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Area</span>
-                <p className="font-semibold text-white mt-1">
-                  {countryData.area ? `${countryData.area.toLocaleString()} km²` : 'N/A'}
-                </p>
-              </div>
-            </div>
-
-            {/* Region & Subregion */}
-            <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-              <span className="text-slate-300 text-xs uppercase tracking-wide">Region</span>
-              <p className="font-semibold text-white mt-1">{countryData.region || 'N/A'}</p>
-              {countryData.subregion && (
-                <>
-                  <span className="text-slate-300 text-xs uppercase tracking-wide mt-3 block">Subregion</span>
-                  <p className="font-semibold text-white mt-1">{countryData.subregion}</p>
-                </>
-              )}
-            </div>
-
-            {/* Languages */}
-            {countryData.languages && (
-              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Languages</span>
-                <p className="font-semibold text-white mt-1">
-                  {Object.values(countryData.languages).join(', ')}
-                </p>
-              </div>
-            )}
-
-            {/* Currencies */}
-            {countryData.currencies && (
-              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Currencies</span>
-                <p className="font-semibold text-white mt-1">
-                  {Object.values(countryData.currencies)
-                    .map(currency => `${currency.name} (${currency.symbol})`)
-                    .join(', ')}
-                </p>
-              </div>
-            )}
-
-            {/* Timezones */}
-            {countryData.timezones && (
-              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Timezones</span>
-                <p className="font-semibold text-white mt-1">
-                  {countryData.timezones.slice(0, 3).join(', ')}
-                  {countryData.timezones.length > 3 && '...'}
-                </p>
-              </div>
-            )}
-
-            {/* Borders */}
-            {countryData.borders && countryData.borders.length > 0 && (
-              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Bordering Countries</span>
-                <p className="font-semibold text-white mt-1">
-                  {countryData.borders.slice(0, 5).join(', ')}
-                  {countryData.borders.length > 5 && '...'}
-                </p>
-              </div>
-            )}
-
-            {/* Additional Information */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              {countryData.independent !== undefined && (
-                <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/50">
-                  <span className="text-slate-300 text-xs uppercase tracking-wide">Independent</span>
-                  <p className="font-semibold text-white mt-1">
-                    {countryData.independent ? 'Yes' : 'No'}
-                  </p>
-                </div>
-              )}
-              
-              {countryData.unMember !== undefined && (
-                <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/50">
-                  <span className="text-slate-300 text-xs uppercase tracking-wide">UN Member</span>
-                  <p className="font-semibold text-white mt-1">
-                    {countryData.unMember ? 'Yes' : 'No'}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Driving Side */}
-            {countryData.car && (
-              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-                <span className="text-slate-300 text-xs uppercase tracking-wide">Driving Side</span>
-                <p className="font-semibold text-white mt-1">
-                  {countryData.car.side || 'Unknown'}
-                </p>
-              </div>
-            )}
-
-            {/* Source Information */}
-            <div className="bg-slate-800/20 rounded-lg p-3 border border-slate-700/30">
-              <p className="text-slate-400 text-xs text-center">
-                Data provided by REST Countries API
-              </p>
-            </div>
+            <p className="text-white text-lg font-medium">
+              {Object.values(country.languages)[0] || "N/A"}
+            </p>
           </div>
         )}
+
+        {country.timezones && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-800/60 transition-colors duration-200">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-cyan-500/20 rounded-lg">
+                <Calendar className="w-5 h-5 text-cyan-400" />
+              </div>
+              <span className="font-semibold text-slate-300">Timezone</span>
+            </div>
+            <p className="text-white text-lg font-medium">
+              {country.timezones[0] || "N/A"}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Coat of Arms */}
+      {country.coatOfArms?.png && (
+        <div className="px-3 pb-3">
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 text-center">
+            <h4 className="text-slate-300 font-semibold mb-3">Coat of Arms</h4>
+            <img
+              src={country.coatOfArms.png}
+              alt="Coat of arms"
+              className="h-20 object-contain drop-shadow-lg mx-auto"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="px-3 pb-3">
+        <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-lg p-3 border border-slate-600/50 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <p className="text-green-400 text-xs font-medium">Real-time Data</p>
+          </div>
+          <p className="text-slate-400 text-sm">
+            Powered by REST Countries API
+          </p>
+          <div className="mt-2 flex justify-center gap-1">
+            <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
+            <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
+            <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
+          </div>
+        </div>
       </div>
     </div>
   );
