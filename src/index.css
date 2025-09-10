@@ -33,4 +33,18 @@ body {
   background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
   min-height: 100vh;
   overflow-x: hidden;
+  color: white;
+}
+
+/* Ensure text colors are properly applied */
+.text-white {
+  color: white !important;
+}
+
+.text-slate-200 {
+  color: #e2e8f0 !important;
+}
+
+.text-slate-300 {
+  color: #cbd5e1 !important;
 }

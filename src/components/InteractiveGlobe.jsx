@@ -70,8 +70,15 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry }) => {
         console.log('Polygon clicked:', polygon);
         console.log('Polygon properties:', polygon?.properties);
         console.log('Country name:', polygon?.properties?.name);
+        console.log('Country data:', polygon?.properties?.countryData);
         console.log('Current selectedCountry:', selectedCountry);
-        onCountryClick(polygon);
+        
+        // Pass the country data instead of the polygon
+        if (polygon?.properties?.countryData) {
+          onCountryClick(polygon.properties.countryData);
+        } else {
+          console.warn('No country data found for:', polygon?.properties?.name);
+        }
       }}
       onPolygonHover={(polygon) => {
         // Simple hover effect without re-rendering
