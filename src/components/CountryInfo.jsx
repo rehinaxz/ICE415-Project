@@ -1,4 +1,4 @@
-import { Users, Landmark, Globe2, X, DollarSign, Clock, Languages } from "lucide-react";
+import { Users, Landmark, Globe2, X, DollarSign, Clock, Languages, MapPin } from "lucide-react";
 
 export default function CountryInfo({ country, onClose }) {
   if (!country) return null;
@@ -8,13 +8,14 @@ export default function CountryInfo({ country, onClose }) {
     name: country.name || { common: 'Unknown Country', official: 'Unknown Country' },
     capital: country.capital || ['N/A'],
     population: country.population || 0,
+    area: country.area || 0,
     region: country.region || 'N/A',
     currencies: country.currencies || {},
     languages: country.languages || {},
     timezones: country.timezones || []
   };
 
-  // Function to get country code for flag API
+  // Function to get country code for flag API with more comprehensive mapping
   const getCountryCode = (countryName) => {
     const countryCodeMap = {
       'United States': 'us',
@@ -77,7 +78,189 @@ export default function CountryInfo({ country, onClose }) {
       'Hong Kong': 'hk',
       'Macau': 'mo',
       'Sudan': 'sd',
-      'Niger': 'ne'
+      'Niger': 'ne',
+      'Libya': 'ly',
+      'Algeria': 'dz',
+      'Morocco': 'ma',
+      'Tunisia': 'tn',
+      'Chad': 'td',
+      'Mali': 'ml',
+      'Burkina Faso': 'bf',
+      'Niger': 'ne',
+      'Senegal': 'sn',
+      'Guinea': 'gn',
+      'Sierra Leone': 'sl',
+      'Liberia': 'lr',
+      'Ghana': 'gh',
+      'Togo': 'tg',
+      'Benin': 'bj',
+      'Cameroon': 'cm',
+      'Central African Republic': 'cf',
+      'Democratic Republic of the Congo': 'cd',
+      'Republic of the Congo': 'cg',
+      'Gabon': 'ga',
+      'Equatorial Guinea': 'gq',
+      'Sao Tome and Principe': 'st',
+      'Angola': 'ao',
+      'Zambia': 'zm',
+      'Zimbabwe': 'zw',
+      'Botswana': 'bw',
+      'Namibia': 'na',
+      'Lesotho': 'ls',
+      'Eswatini': 'sz',
+      'Mozambique': 'mz',
+      'Madagascar': 'mg',
+      'Mauritius': 'mu',
+      'Seychelles': 'sc',
+      'Comoros': 'km',
+      'Djibouti': 'dj',
+      'Somalia': 'so',
+      'Ethiopia': 'et',
+      'Eritrea': 'er',
+      'Kenya': 'ke',
+      'Uganda': 'ug',
+      'Tanzania': 'tz',
+      'Rwanda': 'rw',
+      'Burundi': 'bi',
+      'Malawi': 'mw',
+      'Kazakhstan': 'kz',
+      'Ukraine': 'ua',
+      'Ireland': 'ie',
+      'Mauritania': 'mr',
+      'Democratic Republic of the Congo': 'cd',
+      'Cote d\'Ivoire': 'ci',
+      'Ivory Coast': 'ci',
+      'Burkina Faso': 'bf',
+      'Mali': 'ml',
+      'Guinea': 'gn',
+      'Sierra Leone': 'sl',
+      'Liberia': 'lr',
+      'Ghana': 'gh',
+      'Togo': 'tg',
+      'Benin': 'bj',
+      'Cameroon': 'cm',
+      'Central African Republic': 'cf',
+      'Republic of the Congo': 'cg',
+      'Gabon': 'ga',
+      'Equatorial Guinea': 'gq',
+      'Sao Tome and Principe': 'st',
+      'Angola': 'ao',
+      'Zambia': 'zm',
+      'Zimbabwe': 'zw',
+      'Botswana': 'bw',
+      'Namibia': 'na',
+      'Lesotho': 'ls',
+      'Eswatini': 'sz',
+      'Mozambique': 'mz',
+      'Madagascar': 'mg',
+      'Mauritius': 'mu',
+      'Seychelles': 'sc',
+      'Comoros': 'km',
+      'Djibouti': 'dj',
+      'Somalia': 'so',
+      'Ethiopia': 'et',
+      'Eritrea': 'er',
+      'Kenya': 'ke',
+      'Uganda': 'ug',
+      'Tanzania': 'tz',
+      'Uzbekistan': 'uz',
+      'Turkmenistan': 'tm',
+      'Portugal': 'pt',
+      'Venezuela': 've',
+      'Colombia': 'co',
+      'Ecuador': 'ec',
+      'Suriname': 'sr',
+      'Guyana': 'gy',
+      'Cuba': 'cu',
+      'Dominican Republic': 'do',
+      'Jamaica': 'jm',
+      'The Bahamas': 'bs',
+      'Bahamas': 'bs',
+      'South Sudan': 'ss',
+      'Trinidad and Tobago': 'tt',
+      'Barbados': 'bb',
+      'Saint Lucia': 'lc',
+      'Saint Vincent and the Grenadines': 'vc',
+      'Grenada': 'gd',
+      'Antigua and Barbuda': 'ag',
+      'Saint Kitts and Nevis': 'kn',
+      'Dominica': 'dm',
+      'Belize': 'bz',
+      'Costa Rica': 'cr',
+      'Panama': 'pa',
+      'Nicaragua': 'ni',
+      'Honduras': 'hn',
+      'El Salvador': 'sv',
+      'Guatemala': 'gt',
+      'Haiti': 'ht',
+      'Peru': 'pe',
+      'Bolivia': 'bo',
+      'Paraguay': 'py',
+      'Uruguay': 'uy',
+      'Chile': 'cl',
+      // Pacific Islands
+      'Fiji': 'fj',
+      'Papua New Guinea': 'pg',
+      'Solomon Islands': 'sb',
+      'Vanuatu': 'vu',
+      'New Caledonia': 'nc',
+      'Samoa': 'ws',
+      'Tonga': 'to',
+      'Kiribati': 'ki',
+      'Tuvalu': 'tv',
+      'Palau': 'pw',
+      'Marshall Islands': 'mh',
+      'Micronesia': 'fm',
+      'Nauru': 'nr',
+      'Cook Islands': 'ck',
+      'French Polynesia': 'pf',
+      // European countries
+      'Iceland': 'is',
+      'Jordan': 'jo',
+      'Cyprus': 'cy',
+      'Malta': 'mt',
+      'Luxembourg': 'lu',
+      'Liechtenstein': 'li',
+      'Monaco': 'mc',
+      'San Marino': 'sm',
+      'Vatican City': 'va',
+      'Andorra': 'ad',
+      'Albania': 'al',
+      'Bosnia and Herzegovina': 'ba',
+      'Croatia': 'hr',
+      'Serbia': 'rs',
+      'Montenegro': 'me',
+      'North Macedonia': 'mk',
+      'Slovenia': 'si',
+      'Slovakia': 'sk',
+      'Lithuania': 'lt',
+      'Latvia': 'lv',
+      'Estonia': 'ee',
+      'Moldova': 'md',
+      'Belarus': 'by',
+      'Georgia': 'ge',
+      'Armenia': 'am',
+      'Azerbaijan': 'az',
+      'Kyrgyzstan': 'kg',
+      'Tajikistan': 'tj',
+      // Middle East
+      'Lebanon': 'lb',
+      'Syria': 'sy',
+      'Kuwait': 'kw',
+      'Qatar': 'qa',
+      'Bahrain': 'bh',
+      'Oman': 'om',
+      'Yemen': 'ye',
+      'Palestine': 'ps',
+      // Other missing countries
+      'Maldives': 'mv',
+      'Bhutan': 'bt',
+      'Brunei': 'bn',
+      'East Timor': 'tl',
+      'Timor-Leste': 'tl',
+      // Additional countries
+      'Greenland': 'gl',
+      'Czechia': 'cz'
     };
     
     return countryCodeMap[countryName] || 'un';
@@ -102,58 +285,60 @@ export default function CountryInfo({ country, onClose }) {
     return timezones.slice(0, 3).join(", ") + (timezones.length > 3 ? "..." : "");
   };
 
+  const formatArea = (area) => {
+    if (!area || area === 0) return "N/A";
+    return `${area.toLocaleString()} km²`;
+  };
+
   return (
-    <div className="w-96 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden relative animate-slide-in mr-6 flex flex-col max-h-[90vh]" style={{ marginTop: '80px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)' }}>
-      {/* Close Button */}
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 z-10 p-2 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200 hover:scale-110"
-        >
-          <X className="w-5 h-5 text-white" />
-        </button>
-      )}
+    <div className="bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden relative flex flex-col transition-all duration-500 ease-out transform hover:scale-[1.02] hover:shadow-3xl hover:border-white/30" style={{ marginTop: '80px', marginRight: '20px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', 
+    width: '280px', height: '420px', animation: 'slideInFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.05)', borderRadius: '24px' }}>
       
-      {/* Header */}
-      <div className="p-5 relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1e40af 0%, #dc2626 50%, #fbbf24 100%)' }}>
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-10 h-10 bg-white rounded-full"></div>
-          <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
-        </div>
-        
-        {/* Live Indicator */}
-        <div className="absolute top-5 right-5 flex items-center gap-1.5 text-white/90 text-xs font-medium">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          Live Data
-        </div>
-        
-        {/* Flag */}
-        <div className="w-10 h-6 rounded mb-3 border border-white/20 overflow-hidden relative z-10" style={{ width: '40px', height: '26px', borderRadius: '4px' }}>
-          <img
-            src={`https://flagcdn.com/w320/${getCountryCode(safeCountry.name.common)}.png`}
-            alt={`${safeCountry.name.common} flag`}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.style.display = 'none';
-            }}
-          />
-        </div>
-        
-        {/* Country Name */}
-        <h2 className="text-white font-bold mb-1 relative z-10" style={{ fontSize: '24px' }}>{safeCountry.name.common}</h2>
-        <p className="text-white/80 relative z-10" style={{ fontSize: '14px' }}>{safeCountry.name.official}</p>
-      </div>
+          {/* Header */}
+          <div className="relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1e40af 0%, #dc2626 50%, #fbbf24 100%)', borderRadius: '24px 24px 0 0', padding: '16px' }}>
+ 
+            {/* Flag */}
+            <div className="w-12 h-8 rounded mb-4 border border-white/20 overflow-hidden relative z-10 mt-2 flex items-center justify-center" style={{ width: '48px', height: '32px', borderRadius: '6px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+              <img
+                src={`https://flagcdn.com/w320/${getCountryCode(safeCountry.name.common)}.png`}
+                alt={`${safeCountry.name.common} flag`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  // Show country code as fallback
+                  const fallbackElement = e.target.nextElementSibling;
+                  if (fallbackElement) {
+                    fallbackElement.style.display = 'flex';
+                  }
+                }}
+              />
+              {/* Fallback country code display */}
+              <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs" style={{ display: 'none', backgroundColor: 'rgba(0, 0, 0, 0.8)', borderRadius: '6px' }}>
+                <div className="text-center">
+                  <div className="text-lg font-bold">{getCountryCode(safeCountry.name.common).toUpperCase()}</div>
+                  <div className="text-xs opacity-80">{safeCountry.name.common}</div>
+                </div>
+              </div>
+              {/* Small country code overlay for all flags */}
+              <div className="absolute bottom-0 right-0 bg-black/70 text-white text-xs px-1 py-0.5 rounded-tl" style={{ fontSize: '8px', fontWeight: 'bold' }}>
+                {getCountryCode(safeCountry.name.common).toUpperCase()}
+              </div>
+            </div>
+            
+            {/* Country Name */}
+            <h2 className="text-white font-bold mb-2 relative z-10" style={{ fontSize: '20px' }}>{safeCountry.name.common}</h2>
+            <p className="text-white/80 relative z-10 mb-2" style={{ fontSize: '14px' }}>{safeCountry.name.official}</p>
+          </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ padding: '24px' }}>
+      <div className="flex-1 overflow-y-auto p-4" style={{ padding: '16px' }}>
         {/* Country Information */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Capital */}
-            <div className="rounded-xl p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
                 <Landmark className="w-4 h-4" />
                 Capital
               </div>
@@ -163,9 +348,9 @@ export default function CountryInfo({ country, onClose }) {
             </div>
 
             {/* Population */}
-            <div className="rounded-xl p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
                 <Users className="w-4 h-4" />
                 Population
               </div>
@@ -174,10 +359,22 @@ export default function CountryInfo({ country, onClose }) {
               </div>
             </div>
 
-            {/* Language */}
-            <div className="rounded-xl p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            {/* Area */}
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+                <MapPin className="w-4 h-4" />
+                Area
+              </div>
+              <div className="text-yellow-400 font-semibold" style={{ fontSize: '18px' }}>
+                {formatArea(safeCountry.area)}
+              </div>
+            </div>
+
+            {/* Language */}
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
                 <Languages className="w-4 h-4" />
                 Language
               </div>
@@ -187,9 +384,9 @@ export default function CountryInfo({ country, onClose }) {
             </div>
 
             {/* Region */}
-            <div className="rounded-xl p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
                 <Globe2 className="w-4 h-4" />
                 Region
               </div>
@@ -199,9 +396,9 @@ export default function CountryInfo({ country, onClose }) {
             </div>
 
             {/* Currency */}
-            <div className="rounded-xl p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
                 <DollarSign className="w-4 h-4" />
                 Currency
               </div>
@@ -211,9 +408,9 @@ export default function CountryInfo({ country, onClose }) {
             </div>
 
             {/* Timezone */}
-            <div className="rounded-xl p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
                 <Clock className="w-4 h-4" />
                 Timezone
               </div>
@@ -226,8 +423,8 @@ export default function CountryInfo({ country, onClose }) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 pb-4 flex-shrink-0">
-        <div className="border-t pt-4 text-center" style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}>
+      <div className="px-6 pb-8 pt-2 flex-shrink-0">
+        <div className="border-t pt-6 text-center" style={{ borderColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0 0 24px 24px' }}>
           <p className="text-white/50" style={{ fontSize: '11px' }}>
             Powered by <span className="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">REST Countries API</span>
           </p>

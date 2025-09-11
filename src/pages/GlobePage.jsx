@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import InteractiveGlobe from '../components/InteractiveGlobe';
 import CountryInfo from '../components/CountryInfo';
 
@@ -6,6 +6,7 @@ export default function GlobePage() {
   const [countries, setCountries] = useState({ features: [] });
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [loading, setLoading] = useState(true);
+  const countryInfoRef = useRef(null);
 
   useEffect(() => {
     // Fetch GeoJSON data and simplified country data
@@ -22,7 +23,7 @@ export default function GlobePage() {
         try {
           // Try REST Countries API v3.1 with field filtering
           console.log('📡 Attempting to fetch from REST Countries API v3.1 with field filtering...');
-          const response = await fetch('https://restcountries.com/v3.1/all?fields=name,population,languages,capital,region,currencies,timezones');
+          const response = await fetch('https://restcountries.com/v3.1/all?fields=name,population,languages,capital,region,currencies,timezones,area');
           
           if (response.ok) {
             countriesData = await response.json();
@@ -48,6 +49,7 @@ export default function GlobePage() {
                 },
                 capital: country.capital ? [country.capital] : [],
                 population: country.population,
+                area: country.area,
                 region: country.region,
                 currencies: country.currencies,
                 languages: country.languages,
@@ -158,6 +160,7 @@ export default function GlobePage() {
               },
               capital: ['N/A'],
               population: 0,
+              area: 0,
               region: 'N/A',
               currencies: {},
               languages: {},
@@ -219,20 +222,68 @@ export default function GlobePage() {
     setSelectedCountry(null);
   };
 
+  // Handle background clicks from the globe
+  const handleGlobeBackgroundClick = () => {
+    if (selectedCountry) {
+      console.log('Globe background click - closing panel');
+      setSelectedCountry(null);
+    }
+  };
+
+  // Add keyboard listener for closing panel
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Escape' && selectedCountry) {
+        console.log('Escape key pressed - closing panel');
+        setSelectedCountry(null);
+      }
+    };
+
+    if (selectedCountry) {
+      document.addEventListener('keydown', handleKeyPress);
+      return () => {
+        document.removeEventListener('keydown', handleKeyPress);
+      };
+    }
+  }, [selectedCountry]);
+
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+    <div 
+      className="flex h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+      onClick={(e) => {
+        // Only close if clicking directly on the main container background
+        if (e.target === e.currentTarget && selectedCountry) {
+          console.log('Main container background click - closing panel');
+          setSelectedCountry(null);
+        }
+      }}
+    >
       {/* Globe Container */}
-      <div className="flex-1 max-w-[calc(100vw-384px)]">
+      <div 
+        className="flex-1 max-w-[calc(100vw-320px)] globe-container"
+        onDoubleClick={() => {
+          if (selectedCountry) {
+            console.log('Double click on globe container - closing panel');
+            setSelectedCountry(null);
+          }
+        }}
+      >
         <InteractiveGlobe 
           countries={countries} 
           onCountryClick={handleCountryClick}
           selectedCountry={selectedCountry}
           loading={loading}
+          onBackgroundClick={handleGlobeBackgroundClick}
         />
       </div>
       
       {/* Country Information Panel */}
-      <div className="w-96 min-w-96 bg-transparent" style={{ paddingTop: '40px' }}>
+      <div 
+        ref={countryInfoRef}
+        className="bg-transparent" 
+        style={{ paddingTop: '40px', width: '300px', minWidth: '300px' }}
+        onClick={(e) => e.stopPropagation()} // Prevent clicks on panel from bubbling up
+      >
         <CountryInfo 
           country={selectedCountry} 
           onClose={handleCloseCountryInfo}
