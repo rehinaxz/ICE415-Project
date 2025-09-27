@@ -1,7 +1,19 @@
+/* ===========================
+   Tailwind
+=========================== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ===========================
+   Arcade Font (Press Start 2P)
+   - If you prefer to keep Inter for body, ping me and I'll scope this.
+=========================== */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ===========================
+   Keyframes (your originals)
+=========================== */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -39,55 +51,113 @@
   animation: slide-in 0.3s ease-out;
 }
 
+/* ===========================
+   Reset / Base
+=========================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+}
+
+html, body, #root {
+  min-height: 100%;
 }
 
 body {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Arcade font global */
+  font-family: 'Press Start 2P', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  /* Space/galaxy gradient background */
   background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-  min-height: 100vh;
-  overflow-x: hidden;
   color: white;
+  overflow-x: hidden;
+  letter-spacing: 0.3px; /* tiny spacing suits pixel font */
 }
 
-/* Ensure text colors are properly applied */
-.text-white {
-  color: white !important;
-}
+/* Utility color guards */
+.text-white { color: white !important; }
+.text-slate-200 { color: #e2e8f0 !important; }
+.text-slate-300 { color: #cbd5e1 !important; }
 
-.text-slate-200 {
-  color: #e2e8f0 !important;
-}
-
-.text-slate-300 {
-  color: #cbd5e1 !important;
-}
-
-/* Custom Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
+/* ===========================
+   Custom Scrollbar
+=========================== */
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   transition: background 0.3s ease;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Firefox scrollbar styling */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+/* ===========================
+   Arcade / Neon Styles
+=========================== */
+
+/* Neon arcade button (use on Back button and other CTAs) */
+.btn-arcade {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 2px solid #7c3aed; /* violet */
+  background: radial-gradient(120% 120% at 0% 0%,
+              rgba(124,58,237,.25),
+              rgba(124,58,237,.08) 55%,
+              rgba(255,255,255,.06));
+  color: #fff;
+  text-decoration: none;
+  box-shadow:
+    0 0 6px rgba(124,58,237,.8),
+    0 0 18px rgba(124,58,237,.5),
+    inset 0 0 8px rgba(124,58,237,.35);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, filter .12s ease;
+  will-change: transform;
+}
+
+.btn-arcade:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 0 10px rgba(167,139,250,.95),
+    0 0 28px rgba(124,58,237,.7),
+    inset 0 0 12px rgba(124,58,237,.55);
+  background: radial-gradient(120% 120% at 0% 0%,
+              rgba(124,58,237,.35),
+              rgba(124,58,237,.12) 55%,
+              rgba(255,255,255,.08));
+  filter: drop-shadow(0 0 6px rgba(167,139,250,.7));
+}
+
+.btn-arcade:active {
+  transform: translateY(0) scale(.99);
+}
+
+/* Optional: stick a tiny joystick emoji at the start */
+.btn-arcade::before {
+  content: '🕹️';
+  font-size: 14px;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.6));
+}
+
+/* Neon glow helpers for headings (optional; apply via className) */
+.neon-title {
+  text-shadow:
+    0 0 2px rgba(255,255,255,.35),
+    0 0 8px rgba(124,58,237,.6),
+    0 0 18px rgba(124,58,237,.4);
+}
+
+.neon-subtitle {
+  text-shadow:
+    0 0 2px rgba(255,255,255,.25),
+    0 0 6px rgba(124,58,237,.35);
 }
