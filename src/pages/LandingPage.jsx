@@ -24,8 +24,8 @@ const Button = ({ to, children }) => {
   const [hovered, setHovered] = useState(false);
   const baseColor = "#7c3aed";
   const hoverColor = "#a78bfa";
-  const borderColor = "#4c1d95"; // slightly darker than baseColor
-  const borderColorHover = "#5b21b6"; // slightly darker than hoverColor
+  const borderColor = "#4c1d95";
+  const borderColorHover = "#5b21b6";
   const neonGlow = `0 0 8px 2px ${baseColor}, 0 0 16px 4px ${baseColor}99, 0 0 2px #fff`;
   const neonGlowHover = `0 0 16px 4px ${hoverColor}, 0 0 32px 8px ${hoverColor}bb, 0 0 8px 2px #fff`;
   const style = {

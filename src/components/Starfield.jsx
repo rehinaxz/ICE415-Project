@@ -121,7 +121,7 @@ const Starfield = () => {
       ctx.restore();
 
       // Planets and orbits
-      planets.forEach((planet, i) => {
+      planets.forEach(planet => {
         // Orbit path
         ctx.save();
         ctx.beginPath();
@@ -137,166 +137,15 @@ const Starfield = () => {
         const px = sun.x + planet.radius * Math.cos(planet.angle);
         const py = sun.y + planet.radius * Math.sin(planet.angle);
 
-        // Draw planet with unique design
+        // Draw planet
         ctx.save();
-        ctx.globalAlpha = 0.97;
-        ctx.translate(px, py);
-        switch (i) {
-          case 0: // Mercury: radial gradient, crater dots
-            {
-              const grad = ctx.createRadialGradient(0, 0, planet.size * 0.2, 0, 0, planet.size);
-              grad.addColorStop(0, '#e5e7eb');
-              grad.addColorStop(1, planet.color);
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = grad;
-              ctx.shadowColor = '#e5e7eb';
-              ctx.shadowBlur = 8;
-              ctx.fill();
-              // craters
-              ctx.globalAlpha = 0.5;
-              for (let j = 0; j < 5; j++) {
-                ctx.beginPath();
-                ctx.arc(
-                  Math.cos(j) * planet.size * 0.6,
-                  Math.sin(j) * planet.size * 0.6,
-                  planet.size * 0.18,
-                  0,
-                  Math.PI * 2
-                );
-                ctx.fillStyle = '#b6b6b6';
-                ctx.fill();
-              }
-            }
-            break;
-          case 1: // Venus: subtle stripes
-            {
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = planet.color;
-              ctx.shadowColor = planet.color;
-              ctx.shadowBlur = 12;
-              ctx.fill();
-              ctx.globalAlpha = 0.3;
-              for (let j = -2; j <= 2; j++) {
-                ctx.beginPath();
-                ctx.ellipse(0, j * planet.size * 0.3, planet.size * 0.9, planet.size * 0.18, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#fffbe8';
-                ctx.fill();
-              }
-            }
-            break;
-          case 2: // Earth: blue/green gradient, continents
-            {
-              const grad = ctx.createRadialGradient(0, 0, planet.size * 0.2, 0, 0, planet.size);
-              grad.addColorStop(0, '#38bdf8');
-              grad.addColorStop(0.7, '#34d399');
-              grad.addColorStop(1, planet.color);
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = grad;
-              ctx.shadowColor = '#38bdf8';
-              ctx.shadowBlur = 14;
-              ctx.fill();
-              // continents
-              ctx.globalAlpha = 0.5;
-              ctx.beginPath();
-              ctx.arc(-planet.size * 0.3, -planet.size * 0.2, planet.size * 0.35, 0, Math.PI * 2);
-              ctx.arc(planet.size * 0.2, planet.size * 0.3, planet.size * 0.22, 0, Math.PI * 2);
-              ctx.fillStyle = '#a3e635';
-              ctx.fill();
-            }
-            break;
-          case 3: // Mars: orange gradient, stripes
-            {
-              const grad = ctx.createRadialGradient(0, 0, planet.size * 0.2, 0, 0, planet.size);
-              grad.addColorStop(0, '#f87171');
-              grad.addColorStop(1, planet.color);
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = grad;
-              ctx.shadowColor = '#f87171';
-              ctx.shadowBlur = 10;
-              ctx.fill();
-              ctx.globalAlpha = 0.3;
-              for (let j = -1; j <= 1; j++) {
-                ctx.beginPath();
-                ctx.ellipse(0, j * planet.size * 0.4, planet.size * 0.7, planet.size * 0.13, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-              }
-            }
-            break;
-          case 4: // Jupiter: brown stripes
-            {
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = planet.color;
-              ctx.shadowColor = planet.color;
-              ctx.shadowBlur = 18;
-              ctx.fill();
-              ctx.globalAlpha = 0.4;
-              for (let j = -2; j <= 2; j++) {
-                ctx.beginPath();
-                ctx.ellipse(0, j * planet.size * 0.3, planet.size * 0.9, planet.size * 0.18, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#f59e42';
-                ctx.fill();
-              }
-            }
-            break;
-          case 5: // Saturn: rings
-            {
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = planet.color;
-              ctx.shadowColor = planet.color;
-              ctx.shadowBlur = 14;
-              ctx.fill();
-              // rings
-              ctx.globalAlpha = 0.7;
-              ctx.beginPath();
-              ctx.ellipse(0, 0, planet.size * 1.7, planet.size * 0.5, Math.PI / 6, 0, Math.PI * 2);
-              ctx.strokeStyle = '#fde68a';
-              ctx.lineWidth = 3;
-              ctx.stroke();
-            }
-            break;
-          case 6: // Uranus: blue gradient, subtle glow
-            {
-              const grad = ctx.createRadialGradient(0, 0, planet.size * 0.2, 0, 0, planet.size);
-              grad.addColorStop(0, '#38bdf8');
-              grad.addColorStop(1, planet.color);
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = grad;
-              ctx.shadowColor = '#38bdf8';
-              ctx.shadowBlur = 20;
-              ctx.fill();
-            }
-            break;
-          case 7: // Neptune: dark blue, subtle stripes
-            {
-              ctx.beginPath();
-              ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-              ctx.fillStyle = planet.color;
-              ctx.shadowColor = planet.color;
-              ctx.shadowBlur = 12;
-              ctx.fill();
-              ctx.globalAlpha = 0.2;
-              for (let j = -1; j <= 1; j++) {
-                ctx.beginPath();
-                ctx.ellipse(0, j * planet.size * 0.3, planet.size * 0.8, planet.size * 0.13, 0, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-              }
-            }
-            break;
-          default:
-            ctx.beginPath();
-            ctx.arc(0, 0, planet.size, 0, Math.PI * 2);
-            ctx.fillStyle = planet.color;
-            ctx.fill();
-        }
+        ctx.beginPath();
+        ctx.arc(px, py, planet.size, 0, Math.PI * 2);
+        ctx.fillStyle = planet.color;
+        ctx.shadowColor = planet.color;
+        ctx.shadowBlur = 16;
+        ctx.globalAlpha = 0.95;
+        ctx.fill();
         ctx.restore();
       });
 
@@ -359,36 +208,15 @@ const Starfield = () => {
           a.y = Math.random() * canvas.height;
         }
         ctx.save();
-        ctx.globalAlpha = 0.85;
+        ctx.globalAlpha = 0.8;
         ctx.translate(a.x, a.y);
         ctx.rotate(a.rotation);
-        // Draw irregular rocky shape
         ctx.beginPath();
-        let points = 7 + Math.floor(Math.random() * 3);
-        for (let j = 0; j < points; j++) {
-          let angle = (Math.PI * 2 * j) / points;
-          let rad = a.r * (0.7 + Math.random() * 0.5);
-          ctx.lineTo(Math.cos(angle) * rad, Math.sin(angle) * rad);
-        }
-        ctx.closePath();
+        ctx.arc(0, 0, a.r, 0, Math.PI * 2);
         ctx.fillStyle = a.color;
-        ctx.shadowColor = '#444';
-        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#888';
+        ctx.shadowBlur = 12;
         ctx.fill();
-        // Add rough texture dots
-        ctx.globalAlpha = 0.3;
-        for (let k = 0; k < 6; k++) {
-          ctx.beginPath();
-          ctx.arc(
-            (Math.random() - 0.5) * a.r,
-            (Math.random() - 0.5) * a.r,
-            a.r * 0.18,
-            0,
-            Math.PI * 2
-          );
-          ctx.fillStyle = '#888';
-          ctx.fill();
-        }
         ctx.restore();
       });
 
@@ -401,35 +229,28 @@ const Starfield = () => {
           c.x = Math.random() * canvas.width;
           c.y = Math.random() * canvas.height;
         }
-        // Glowing tail effect
+        // Tail
         ctx.save();
-        ctx.globalAlpha = 0.7;
+        ctx.globalAlpha = 0.6;
         ctx.translate(c.x, c.y);
         ctx.rotate(c.rotation);
-        let tailGrad = ctx.createLinearGradient(0, 0, -c.tail, c.tail * 0.2);
-        tailGrad.addColorStop(0, c.color);
-        tailGrad.addColorStop(1, 'rgba(96,165,250,0)');
-        ctx.strokeStyle = tailGrad;
-        ctx.lineWidth = 6;
+        ctx.strokeStyle = c.color;
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(-c.tail, c.tail * 0.2);
         ctx.stroke();
         ctx.restore();
-        // Glowing comet head
+        // Head
         ctx.save();
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha = 0.9;
         ctx.translate(c.x, c.y);
         ctx.rotate(c.rotation);
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        let cometGrad = ctx.createRadialGradient(0, 0, c.r * 0.2, 0, 0, c.r);
-        cometGrad.addColorStop(0, '#fff');
-        cometGrad.addColorStop(0.5, c.color);
-        cometGrad.addColorStop(1, 'rgba(96,165,250,0.7)');
-        ctx.fillStyle = cometGrad;
+        ctx.fillStyle = c.color;
         ctx.shadowColor = c.color;
-        ctx.shadowBlur = 24;
+        ctx.shadowBlur = 16;
         ctx.fill();
         ctx.restore();
       });
@@ -443,28 +264,28 @@ const Starfield = () => {
           m.x = Math.random() * canvas.width;
           m.y = Math.random() * canvas.height;
         }
-        // Quick glowing streak effect
+        // Tail
         ctx.save();
-        ctx.globalAlpha = 0.85;
+        ctx.globalAlpha = 0.7;
         ctx.translate(m.x, m.y);
         ctx.rotate(m.rotation);
-        let meteorGrad = ctx.createLinearGradient(0, 0, -m.tail, m.tail * 0.3);
-        meteorGrad.addColorStop(0, '#fff');
-        meteorGrad.addColorStop(0.5, m.color);
-        meteorGrad.addColorStop(1, 'rgba(245,158,66,0)');
-        ctx.strokeStyle = meteorGrad;
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = m.color;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(-m.tail, m.tail * 0.3);
         ctx.stroke();
-        // Head (small, bright)
+        ctx.restore();
+        // Head
+        ctx.save();
         ctx.globalAlpha = 1;
+        ctx.translate(m.x, m.y);
+        ctx.rotate(m.rotation);
         ctx.beginPath();
-        ctx.arc(0, 0, m.r * 0.7, 0, Math.PI * 2);
-        ctx.fillStyle = '#fff';
+        ctx.arc(0, 0, m.r, 0, Math.PI * 2);
+        ctx.fillStyle = m.color;
         ctx.shadowColor = m.color;
-        ctx.shadowBlur = 18;
+        ctx.shadowBlur = 10;
         ctx.fill();
         ctx.restore();
       });
