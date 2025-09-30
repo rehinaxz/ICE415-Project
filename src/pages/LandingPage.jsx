@@ -58,13 +58,30 @@ const LandingPage = () => (
       <header style={{ textAlign: "center", marginTop: 40 }}>
         <h1
           style={{
-            fontSize: 48,
+            fontSize: 52,
             lineHeight: 1.1,
             marginBottom: 8,
-            fontWeight: 800,
+            fontWeight: 900,
+            color: '#fff',
+            letterSpacing: 1.2,
+            textAlign: 'center',
+            textShadow:
+              '0 0 8px #38bdf8, 0 0 16px #34d399, 0 0 2px #fff',
+            WebkitTextStroke: '2px #34d399',
           }}
         >
-          Welcome to <span style={{ color: "#a78bfa" }}>World Explorer</span>
+          <span
+            style={{
+              background: 'linear-gradient(90deg, #34d399 0%, #38bdf8 60%, #0b1b3a 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              textShadow:
+                '0 0 16px #38bdf8, 0 0 24px #34d399, 0 0 4px #fff',
+              WebkitTextStroke: '2px #38bdf8',
+            }}
+          >
+            Journey Around Earth
+          </span>
         </h1>
         <p style={{ opacity: 0.85, maxWidth: 760, margin: "12px auto 0" }}>
           Explore countries on a 3D globe or play a quick guessing game.
