@@ -173,6 +173,9 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
           return 0.005;
         }}
         onPolygonClick={(polygon) => {
+          // When a country is clicked, clear hover state so label disappears
+          setHoveredCountry(null);
+          setHoverLabel(null);
           if (polygon?.properties?.countryData) {
             onCountryClick(polygon.properties.countryData);
           }

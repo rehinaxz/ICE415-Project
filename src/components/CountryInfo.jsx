@@ -86,7 +86,6 @@ export default function CountryInfo({ country, onClose }) {
       'Chad': 'td',
       'Mali': 'ml',
       'Burkina Faso': 'bf',
-      'Niger': 'ne',
       'Senegal': 'sn',
       'Guinea': 'gn',
       'Sierra Leone': 'sl',
@@ -98,117 +97,6 @@ export default function CountryInfo({ country, onClose }) {
       'Central African Republic': 'cf',
       'Democratic Republic of the Congo': 'cd',
       'Republic of the Congo': 'cg',
-      'Gabon': 'ga',
-      'Equatorial Guinea': 'gq',
-      'Sao Tome and Principe': 'st',
-      'Angola': 'ao',
-      'Zambia': 'zm',
-      'Zimbabwe': 'zw',
-      'Botswana': 'bw',
-      'Namibia': 'na',
-      'Lesotho': 'ls',
-      'Eswatini': 'sz',
-      'Mozambique': 'mz',
-      'Madagascar': 'mg',
-      'Mauritius': 'mu',
-      'Seychelles': 'sc',
-      'Comoros': 'km',
-      'Djibouti': 'dj',
-      'Somalia': 'so',
-      'Ethiopia': 'et',
-      'Eritrea': 'er',
-      'Kenya': 'ke',
-      'Uganda': 'ug',
-      'Tanzania': 'tz',
-      'Rwanda': 'rw',
-      'Burundi': 'bi',
-      'Malawi': 'mw',
-      'Kazakhstan': 'kz',
-      'Ukraine': 'ua',
-      'Ireland': 'ie',
-      'Mauritania': 'mr',
-      'Democratic Republic of the Congo': 'cd',
-      'Cote d\'Ivoire': 'ci',
-      'Ivory Coast': 'ci',
-      'Burkina Faso': 'bf',
-      'Mali': 'ml',
-      'Guinea': 'gn',
-      'Sierra Leone': 'sl',
-      'Liberia': 'lr',
-      'Ghana': 'gh',
-      'Togo': 'tg',
-      'Benin': 'bj',
-      'Cameroon': 'cm',
-      'Central African Republic': 'cf',
-      'Republic of the Congo': 'cg',
-      'Gabon': 'ga',
-      'Equatorial Guinea': 'gq',
-      'Sao Tome and Principe': 'st',
-      'Angola': 'ao',
-      'Zambia': 'zm',
-      'Zimbabwe': 'zw',
-      'Botswana': 'bw',
-      'Namibia': 'na',
-      'Lesotho': 'ls',
-      'Eswatini': 'sz',
-      'Mozambique': 'mz',
-      'Madagascar': 'mg',
-      'Mauritius': 'mu',
-      'Seychelles': 'sc',
-      'Comoros': 'km',
-      'Djibouti': 'dj',
-      'Somalia': 'so',
-      'Ethiopia': 'et',
-      'Eritrea': 'er',
-      'Kenya': 'ke',
-      'Uganda': 'ug',
-      'Tanzania': 'tz',
-      'Uzbekistan': 'uz',
-      'Turkmenistan': 'tm',
-      'Portugal': 'pt',
-      'Venezuela': 've',
-      'Colombia': 'co',
-      'Ecuador': 'ec',
-      'Suriname': 'sr',
-      'Guyana': 'gy',
-      'Cuba': 'cu',
-      'Dominican Republic': 'do',
-      'Jamaica': 'jm',
-      'The Bahamas': 'bs',
-      'Bahamas': 'bs',
-      'South Sudan': 'ss',
-      'Trinidad and Tobago': 'tt',
-      'Barbados': 'bb',
-      'Saint Lucia': 'lc',
-      'Saint Vincent and the Grenadines': 'vc',
-      'Grenada': 'gd',
-      'Antigua and Barbuda': 'ag',
-      'Saint Kitts and Nevis': 'kn',
-      'Dominica': 'dm',
-      'Belize': 'bz',
-      'Costa Rica': 'cr',
-      'Panama': 'pa',
-      'Nicaragua': 'ni',
-      'Honduras': 'hn',
-      'El Salvador': 'sv',
-      'Guatemala': 'gt',
-      'Haiti': 'ht',
-      'Peru': 'pe',
-      'Bolivia': 'bo',
-      'Paraguay': 'py',
-      'Uruguay': 'uy',
-      'Chile': 'cl',
-      // Pacific Islands
-      'Fiji': 'fj',
-      'Papua New Guinea': 'pg',
-      'Solomon Islands': 'sb',
-      'Vanuatu': 'vu',
-      'New Caledonia': 'nc',
-      'Samoa': 'ws',
-      'Tonga': 'to',
-      'Kiribati': 'ki',
-      'Tuvalu': 'tv',
-      'Palau': 'pw',
       'Marshall Islands': 'mh',
       'Micronesia': 'fm',
       'Nauru': 'nr',
@@ -246,7 +134,6 @@ export default function CountryInfo({ country, onClose }) {
       // Middle East
       'Lebanon': 'lb',
       'Syria': 'sy',
-      'Kuwait': 'kw',
       'Qatar': 'qa',
       'Bahrain': 'bh',
       'Oman': 'om',
@@ -269,12 +156,10 @@ export default function CountryInfo({ country, onClose }) {
   const formatCurrency = (currencies) => {
     if (!currencies || Object.keys(currencies).length === 0) return "N/A";
     const currency = Object.values(currencies)[0];
-    if (!currency || !currency.name) return "N/A";
     return `${currency.name} (${currency.symbol || 'N/A'})`;
   };
 
   const formatLanguages = (languages) => {
-    if (!languages || Object.keys(languages).length === 0) return "N/A";
     const languageValues = Object.values(languages);
     if (languageValues.length === 0) return "N/A";
     return languageValues.join(", ");
@@ -291,71 +176,98 @@ export default function CountryInfo({ country, onClose }) {
   };
 
   return (
-    <div className="bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden relative flex flex-col transition-all duration-500 ease-out transform hover:scale-[1.02] hover:shadow-3xl hover:border-white/30" style={{ marginTop: '80px', marginRight: '20px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', width: '280px', height: '420px', animation: 'slideInFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.05)', borderRadius: '24px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif", position: 'relative' }}>
+    <div
+      className="bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden fixed flex flex-col transition-all duration-500 ease-out transform hover:scale-[1.02] hover:shadow-3xl hover:border-white/30"
+      style={{
+        top: '50%',
+        right: '5vw',
+        transform: 'translateY(-50%)',
+        background: 'rgba(20, 24, 48, 0.85)',
+        backdropFilter: 'blur(24px)',
+        width: '340px',
+        height: '500px',
+        maxWidth: '92vw',
+        maxHeight: '92vh',
+        animation: 'popInScaleFade 0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(80, 80, 255, 0.10), 0 0 40px 8px #312e8144',
+        borderRadius: '28px',
+        fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif",
+        zIndex: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+      }}
+    >
       {/* Close Button */}
       <button
         aria-label="Close country info"
         onClick={onClose}
         style={{
           position: 'absolute',
-          top: 10,
-          right: 10,
-          background: 'rgba(0,0,0,0.12)',
-          border: 'none',
+          top: 16,
+          right: 16,
+          background: 'linear-gradient(90deg, #E1DED9 0%, #A9C4C4 100%)',
+          border: '1px solid #000435',
           borderRadius: '50%',
-          width: 32,
-          height: 32,
-          color: '#fff',
-          fontSize: 20,
+          width: 36,
+          height: 36,
+          color: '#000435',
+          fontSize: 22,
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-          transition: 'background 0.18s',
+          boxShadow: '0 2px 12px 0 #00043522',
+          transition: 'box-shadow 0.18s, background 0.18s, border-color 0.18s',
           zIndex: 20,
         }}
-        onMouseOver={e => e.currentTarget.style.background = 'rgba(0,0,0,0.22)'}
-        onMouseOut={e => e.currentTarget.style.background = 'rgba(0,0,0,0.12)'}
+        onMouseOver={e => {
+          e.currentTarget.style.transform = 'scale(1.08)';
+          e.currentTarget.style.background = 'linear-gradient(90deg, #A9C4C4 0%, #E1DED9 100%)';
+        }}
+        onMouseOut={e => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.background = 'linear-gradient(90deg, #E1DED9 0%, #A9C4C4 100%)';
+        }}
       >
-        <span style={{fontSize: 20, lineHeight: 1}}>❌</span>
+        <X style={{ width: 22, height: 22, color: '#000435' }} />
       </button>
-      {/* Header */}
-      <div className="relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1e40af 0%, #dc2626 50%, #fbbf24 100%)', borderRadius: '24px 24px 0 0', padding: '16px' }}>
-        {/* Flag */}
-        <div className="w-12 h-8 rounded mb-4 border border-white/20 overflow-hidden relative z-10 mt-2 flex items-center justify-center" style={{ width: '48px', height: '32px', borderRadius: '6px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-          <img
-            src={`https://flagcdn.com/w320/${getCountryCode(safeCountry.name.common)}.png`}
-            alt={`${safeCountry.name.common} flag`}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              // Show country code as fallback
-              const fallbackElement = e.target.nextElementSibling;
-              if (fallbackElement) {
-                fallbackElement.style.display = 'flex';
-              }
-            }}
-          />
-          {/* Fallback country code display */}
-          <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs" style={{ display: 'none', backgroundColor: 'rgba(0, 0, 0, 0.8)', borderRadius: '6px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
-            <div className="text-center">
-              <div className="text-lg font-bold">{getCountryCode(safeCountry.name.common).toUpperCase()}</div>
-              <div className="text-xs opacity-80">{safeCountry.name.common}</div>
+      {/* Title Section: Flag, Country Code, Name, Subtitle */}
+        <div className="relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(90deg, #004466 0%, #000435 100%)', borderRadius: '28px 28px 0 0', padding: '22px 20px 16px 20px', minHeight: '120px', boxShadow: '0 4px 24px 0 #00043544' }}>
+          <div className="flex flex-col items-center justify-center w-full" style={{ gap: '2px', marginTop: '2px', marginBottom: '2px' }}>
+            <div className="w-14 h-9 rounded border border-white/20 overflow-hidden flex items-center justify-center" style={{ width: '56px', height: '36px', borderRadius: '8px', backgroundColor: 'rgba(255, 255, 255, 0.10)', boxShadow: '0 2px 8px #818cf822', marginBottom: '0', marginTop: '0' }}>
+              <img
+                src={`https://flagcdn.com/w320/${getCountryCode(safeCountry.name.common)}.png`}
+                alt={`${safeCountry.name.common} flag`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  // Show country code as fallback
+                  const fallbackElement = e.target.nextElementSibling;
+                  if (fallbackElement) {
+                    fallbackElement.style.display = 'flex';
+                  }
+                }}
+              />
+              {/* Fallback country code display */}
+              <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs" style={{ display: 'none', backgroundColor: 'rgba(0, 0, 0, 0.8)', borderRadius: '6px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
+                <div className="text-center">
+                  <div className="text-lg font-bold">{getCountryCode(safeCountry.name.common).toUpperCase()}</div>
+                  <div className="text-xs opacity-80">{safeCountry.name.common}</div>
+                </div>
+              </div>
             </div>
+            <div className="text-white text-xs font-bold tracking-widest" style={{ fontSize: '15px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif", letterSpacing: '0.14em', minWidth: '32px', textAlign: 'center', marginTop: '0', marginBottom: '0' }}>
+              {getCountryCode(safeCountry.name.common).toUpperCase()}
+            </div>
+            <h2 className="relative z-10" style={{ fontSize: '24px', color: '#fff', fontWeight: 800, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif", textShadow: '0 2px 12px #000435cc', margin: 0, textAlign: 'center', lineHeight: 1.1 }}>{safeCountry.name.common}</h2>
           </div>
-          {/* Small country code overlay for all flags */}
-          <div className="absolute bottom-0 right-0 bg-black/70 text-white text-xs px-1 py-0.5 rounded-tl" style={{ fontSize: '8px', fontWeight: 'bold', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
-            {getCountryCode(safeCountry.name.common).toUpperCase()}
-          </div>
-        </div>
-        {/* Country Name */}
-        <h2 className="mb-2 relative z-10" style={{ fontSize: '20px', color: '#fff', fontWeight: 700, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>{safeCountry.name.common}</h2>
-        <p className="relative z-10 mb-2" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', fontWeight: 400, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>{safeCountry.name.official}</p>
+          <p className="relative z-10 mb-2" style={{ fontSize: '15px', color: '#fff', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif", textShadow: '0 1px 6px #004466', textAlign: 'center', margin: 0, marginTop: '2px' }}>{safeCountry.name.official}</p>
+        {/* (All flag/country code/country name markup is now in the new centered layout above) */}
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4" style={{ padding: '16px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
+  <div className="flex-1 overflow-y-auto p-4" style={{ padding: '20px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
         {/* Country Information */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -448,8 +360,8 @@ export default function CountryInfo({ country, onClose }) {
 
       {/* Footer */}
       <div className="px-6 pb-8 pt-2 flex-shrink-0" style={{ fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
-        <div className="border-t pt-6 text-center" style={{ borderColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0 0 24px 24px' }}>
-          <p className="text-white/50" style={{ fontSize: '11px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
+        <div className="border-t pt-6 text-center" style={{ borderColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0 0 28px 28px' }}>
+          <p className="text-white/50" style={{ fontSize: '12px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
             Powered by <span className="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">REST Countries API</span>
           </p>
         </div>
