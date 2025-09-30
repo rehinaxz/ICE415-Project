@@ -22,28 +22,38 @@ const Page = ({ children, style }) => (
 // Styled button for navigation with hover effect
 const Button = ({ to, children }) => {
   const [hovered, setHovered] = useState(false);
-  const common = {
-    padding: "14px 20px",
-    borderRadius: 14,
-    fontWeight: 700,
-    letterSpacing: 0.3,
+  const baseColor = "#7c3aed";
+  const hoverColor = "#a78bfa";
+  const borderColor = "#4c1d95"; // slightly darker than baseColor
+  const borderColorHover = "#5b21b6"; // slightly darker than hoverColor
+  const neonGlow = `0 0 8px 2px ${baseColor}, 0 0 16px 4px ${baseColor}99, 0 0 2px #fff`;
+  const neonGlowHover = `0 0 16px 4px ${hoverColor}, 0 0 32px 8px ${hoverColor}bb, 0 0 8px 2px #fff`;
+  const style = {
+    padding: "14px 28px",
+    borderRadius: 16,
+    fontWeight: 800,
+    fontSize: 18,
+    letterSpacing: 0.5,
     textDecoration: "none",
     display: "inline-block",
-    transition:
-      "background 0.3s cubic-bezier(.4,0,.2,1), color 0.3s cubic-bezier(.4,0,.2,1), border-color 0.3s cubic-bezier(.4,0,.2,1), transform .15s ease, box-shadow .15s ease",
-    boxShadow: "0 10px 25px rgba(0,0,0,.35)",
     margin: 8,
     cursor: "pointer",
-    background: hovered ? "#a78bfa" : "#7c3aed",
+    background: hovered ? hoverColor : baseColor,
     color: "#fff",
-    border: hovered ? "2px solid #7c3aed" : "2px solid #a78bfa"
+    border: `2.5px solid ${hovered ? borderColorHover : borderColor}`,
+    boxShadow: hovered ? neonGlowHover : neonGlow,
+    outline: "none",
+    transition:
+      "background 0.3s cubic-bezier(.4,0,.2,1), color 0.3s cubic-bezier(.4,0,.2,1), border-color 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.4s cubic-bezier(.4,0,.2,1), transform .18s cubic-bezier(.4,0,.2,1)",
+    transform: hovered ? "scale(1.07)" : "scale(1)"
   };
   return (
     <Link to={to} style={{ textDecoration: "none" }}>
       <span
-        style={common}
+        style={style}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        tabIndex={0}
       >
         {children}
       </span>
