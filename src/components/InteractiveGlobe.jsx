@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import Globe from "react-globe.gl";
 
 const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgroundClick }) => {
@@ -206,20 +207,21 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
             left: hoverLabel.x + 12,
             top: hoverLabel.y - 18,
             pointerEvents: 'none',
-            background: 'rgba(0,0,0,0.82)',
-            color: '#00ffff',
-            padding: '6px 14px',
-            borderRadius: 8,
+            background: 'linear-gradient(90deg, #0033FF 0%, #0600AB 60%, #00003D 100%)',
+            color: '#fff',
+            padding: '7px 18px',
+            borderRadius: 10,
             fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif",
-            fontWeight: 600,
-            fontSize: 16,
-            boxShadow: '0 2px 12px rgba(0,255,255,0.18)',
+            fontWeight: 700,
+            fontSize: 17,
+            boxShadow: '0 0 16px 2px #0033FF99, 0 2px 16px 0 #00003D88',
             zIndex: 30,
             whiteSpace: 'nowrap',
-            border: '1.5px solid #00ffff',
-            textShadow: '0 0 6px #00ffff88',
+            border: '2px solid #0033FF',
+            textShadow: '0 0 8px #0033FFcc, 0 1px 8px #00003Dcc',
             transition: 'opacity 0.18s',
             opacity: 1,
+            filter: 'drop-shadow(0 0 8px #0033FF88)',
           }}
         >
           {hoverLabel.name}
