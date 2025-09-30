@@ -4,6 +4,7 @@ import Globe from "react-globe.gl";
 const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgroundClick }) => {
   const globeRef = useRef();
   const [hoveredCountry, setHoveredCountry] = useState(null);
+  const [hoverLabel, setHoverLabel] = useState(null); // { name, x, y }
 
   // Function to match country names with better accuracy
   const isCountryMatch = (polygonName, countryName) => {
@@ -86,115 +87,142 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
     }
   }, []);
 
+  // Mouse move handler to update label position
+  const handleMouseMove = (event) => {
+    if (hoveredCountry) {
+      const globeRect = globeRef.current?.parentElement?.getBoundingClientRect();
+      setHoverLabel({
+        name: hoveredCountry,
+        x: event.clientX - (globeRect?.left || 0),
+        y: event.clientY - (globeRect?.top || 0)
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (hoveredCountry) {
+      window.addEventListener('mousemove', handleMouseMove);
+    } else {
+      setHoverLabel(null);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+    // eslint-disable-next-line
+  }, [hoveredCountry]);
+
   return (
-    <Globe
-      ref={globeRef}
-      globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-      backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-      polygonsData={countries.features}
-      polygonAltitude={(d) => {
-        // Make selected country pop up to 0.15
-        if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-          console.log('🎯 Setting altitude for selected country:', d.properties.name, 'vs', selectedCountry.name.common, 'to 0.15');
-          return 0.15; // Pop up height for selected country
-        }
-        // Make hovered country slightly raised
-        if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-          console.log('👆 Setting altitude for hovered country:', d.properties.name, 'vs', hoveredCountry, 'to 0.01');
-          return 0.01; // Slightly raised for hovered country
-        }
-        return 0.005; // Even lower for others to make popup more visible
-      }}
-      polygonCapColor={(d) => {
-        // Highlight selected country
-        if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-          console.log('Setting gold color for selected country:', d.properties.name);
-          return "rgba(255, 215, 0, 0.9)"; // Gold for selected
-        }
-        // Highlight hovered country
-        if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-          return "rgba(255, 165, 0, 0.6)"; // Orange for hovered
-        }
-        return "rgba(0, 150, 255, 0.2)"; // Blue for others
-      }}
-      polygonSideColor={(d) => {
-        // Highlight selected country
-        if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-          return "rgba(255, 215, 0, 0.5)"; // Gold sides for selected
-        }
-        // Highlight hovered country
-        if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-          return "rgba(255, 165, 0, 0.3)"; // Orange sides for hovered
-        }
-        return "rgba(0, 150, 255, 0.1)"; // Blue sides for others
-      }}
-      polygonStrokeColor={(d) => {
-        // Highlight selected country
-        if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-          return "rgba(255, 215, 0, 1)"; // Gold border for selected
-        }
-        // Highlight hovered country
-        if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-          return "rgba(255, 165, 0, 1)"; // Orange border for hovered
-        }
-        return "rgba(255, 255, 255, 1)"; // White border for others
-      }}
-      polygonStrokeWidth={(d) => {
-        // Make selected country outline much thicker
-        if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-          return 8; // Much thicker border for selected
-        }
-        // Make hovered country outline thicker
-        if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-          return 5; // Thicker border for hovered
-        }
-        return 2; // Thinner for others
-      }}
-      polygonStrokeAltitude={(d) => {
-        // Make stroke follow the country surface
-        if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-          return 0.15; // Same as country altitude
-        }
-        if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-          return 0.08; // Same as hovered altitude
-        }
-        return 0.005; // Same as country altitude
-      }}
-      onPolygonClick={(polygon) => {
-        console.log('=== COUNTRY CLICK DETECTED ===');
-        console.log('Polygon clicked:', polygon);
-        console.log('Polygon properties:', polygon?.properties);
-        console.log('Country name:', polygon?.properties?.name);
-        console.log('Country data:', polygon?.properties?.countryData);
-        console.log('Current selectedCountry:', selectedCountry);
-        
-        // Pass the country data instead of the polygon
-        if (polygon?.properties?.countryData) {
-          console.log('Calling onCountryClick with:', polygon.properties.countryData.name);
-          onCountryClick(polygon.properties.countryData);
-        } else {
-          console.warn('No country data found for:', polygon?.properties?.name);
-        }
-      }}
-      onGlobeReady={() => {
-        console.log('Globe is ready');
-      }}
-      onPolygonHover={(polygon) => {
-        // Set hovered country for visual feedback
-        if (polygon?.properties?.name) {
-          setHoveredCountry(polygon.properties.name);
-          console.log('Hovering over:', polygon.properties.name);
-        }
-      }}
-      polygonsTransitionDuration={300}
-      width={window.innerWidth}
-      height={window.innerHeight}
-      backgroundColor="rgba(0,0,0,0)"
-      enablePointerInteraction={true}
-      showPolygonStroke={true}
-      showPolygonCap={true}
-      // Removed problematic properties that were causing material.dispose errors
-    />
+    <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
+      <Globe
+        ref={globeRef}
+        globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+        polygonsData={countries.features}
+        polygonAltitude={(d) => {
+          if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
+            return 0.15;
+          }
+          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return 0.01;
+          }
+          return 0.005;
+        }}
+        polygonCapColor={(d) => {
+          if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
+            return "rgba(255, 215, 0, 0.9)";
+          }
+          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return "rgba(255, 165, 0, 0.6)";
+          }
+          return "rgba(0, 150, 255, 0.2)";
+        }}
+        polygonSideColor={(d) => {
+          if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
+            return "rgba(255, 215, 0, 0.5)";
+          }
+          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return "rgba(255, 165, 0, 0.3)";
+          }
+          return "rgba(0, 150, 255, 0.1)";
+        }}
+        polygonStrokeColor={(d) => {
+          if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
+            return "rgba(255, 215, 0, 1)";
+          }
+          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return "rgba(255, 165, 0, 1)";
+          }
+          return "rgba(255, 255, 255, 1)";
+        }}
+        polygonStrokeWidth={(d) => {
+          if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
+            return 8;
+          }
+          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return 5;
+          }
+          return 2;
+        }}
+        polygonStrokeAltitude={(d) => {
+          if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
+            return 0.15;
+          }
+          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return 0.08;
+          }
+          return 0.005;
+        }}
+        onPolygonClick={(polygon) => {
+          if (polygon?.properties?.countryData) {
+            onCountryClick(polygon.properties.countryData);
+          }
+        }}
+        onGlobeReady={() => {
+          // Globe is ready
+        }}
+        onPolygonHover={(polygon) => {
+          if (polygon?.properties?.name) {
+            setHoveredCountry(polygon.properties.name);
+          } else {
+            setHoveredCountry(null);
+          }
+        }}
+        polygonsTransitionDuration={300}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        backgroundColor="rgba(0,0,0,0)"
+        enablePointerInteraction={true}
+        showPolygonStroke={true}
+        showPolygonCap={true}
+      />
+      {/* Floating country label */}
+      {hoverLabel && (
+        <div
+          style={{
+            position: 'absolute',
+            left: hoverLabel.x + 12,
+            top: hoverLabel.y - 18,
+            pointerEvents: 'none',
+            background: 'rgba(0,0,0,0.82)',
+            color: '#00ffff',
+            padding: '6px 14px',
+            borderRadius: 8,
+            fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif",
+            fontWeight: 600,
+            fontSize: 16,
+            boxShadow: '0 2px 12px rgba(0,255,255,0.18)',
+            zIndex: 30,
+            whiteSpace: 'nowrap',
+            border: '1.5px solid #00ffff',
+            textShadow: '0 0 6px #00ffff88',
+            transition: 'opacity 0.18s',
+            opacity: 1,
+          }}
+        >
+          {hoverLabel.name}
+        </div>
+      )}
+    </div>
   );
 };
 

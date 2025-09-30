@@ -291,130 +291,154 @@ export default function CountryInfo({ country, onClose }) {
   };
 
   return (
-    <div className="bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden relative flex flex-col transition-all duration-500 ease-out transform hover:scale-[1.02] hover:shadow-3xl hover:border-white/30" style={{ marginTop: '80px', marginRight: '20px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', 
-    width: '280px', height: '420px', animation: 'slideInFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.05)', borderRadius: '24px' }}>
-      
-          {/* Header */}
-          <div className="relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1e40af 0%, #dc2626 50%, #fbbf24 100%)', borderRadius: '24px 24px 0 0', padding: '16px' }}>
- 
-            {/* Flag */}
-            <div className="w-12 h-8 rounded mb-4 border border-white/20 overflow-hidden relative z-10 mt-2 flex items-center justify-center" style={{ width: '48px', height: '32px', borderRadius: '6px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-              <img
-                src={`https://flagcdn.com/w320/${getCountryCode(safeCountry.name.common)}.png`}
-                alt={`${safeCountry.name.common} flag`}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  // Show country code as fallback
-                  const fallbackElement = e.target.nextElementSibling;
-                  if (fallbackElement) {
-                    fallbackElement.style.display = 'flex';
-                  }
-                }}
-              />
-              {/* Fallback country code display */}
-              <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs" style={{ display: 'none', backgroundColor: 'rgba(0, 0, 0, 0.8)', borderRadius: '6px' }}>
-                <div className="text-center">
-                  <div className="text-lg font-bold">{getCountryCode(safeCountry.name.common).toUpperCase()}</div>
-                  <div className="text-xs opacity-80">{safeCountry.name.common}</div>
-                </div>
-              </div>
-              {/* Small country code overlay for all flags */}
-              <div className="absolute bottom-0 right-0 bg-black/70 text-white text-xs px-1 py-0.5 rounded-tl" style={{ fontSize: '8px', fontWeight: 'bold' }}>
-                {getCountryCode(safeCountry.name.common).toUpperCase()}
-              </div>
+    <div className="bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden relative flex flex-col transition-all duration-500 ease-out transform hover:scale-[1.02] hover:shadow-3xl hover:border-white/30" style={{ marginTop: '80px', marginRight: '20px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', width: '280px', height: '420px', animation: 'slideInFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.05)', borderRadius: '24px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif", position: 'relative' }}>
+      {/* Close Button */}
+      <button
+        aria-label="Close country info"
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          background: 'rgba(0,0,0,0.12)',
+          border: 'none',
+          borderRadius: '50%',
+          width: 32,
+          height: 32,
+          color: '#fff',
+          fontSize: 20,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+          transition: 'background 0.18s',
+          zIndex: 20,
+        }}
+        onMouseOver={e => e.currentTarget.style.background = 'rgba(0,0,0,0.22)'}
+        onMouseOut={e => e.currentTarget.style.background = 'rgba(0,0,0,0.12)'}
+      >
+        <span style={{fontSize: 20, lineHeight: 1}}>❌</span>
+      </button>
+      {/* Header */}
+      <div className="relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1e40af 0%, #dc2626 50%, #fbbf24 100%)', borderRadius: '24px 24px 0 0', padding: '16px' }}>
+        {/* Flag */}
+        <div className="w-12 h-8 rounded mb-4 border border-white/20 overflow-hidden relative z-10 mt-2 flex items-center justify-center" style={{ width: '48px', height: '32px', borderRadius: '6px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+          <img
+            src={`https://flagcdn.com/w320/${getCountryCode(safeCountry.name.common)}.png`}
+            alt={`${safeCountry.name.common} flag`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              // Show country code as fallback
+              const fallbackElement = e.target.nextElementSibling;
+              if (fallbackElement) {
+                fallbackElement.style.display = 'flex';
+              }
+            }}
+          />
+          {/* Fallback country code display */}
+          <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs" style={{ display: 'none', backgroundColor: 'rgba(0, 0, 0, 0.8)', borderRadius: '6px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
+            <div className="text-center">
+              <div className="text-lg font-bold">{getCountryCode(safeCountry.name.common).toUpperCase()}</div>
+              <div className="text-xs opacity-80">{safeCountry.name.common}</div>
             </div>
-            
-            {/* Country Name */}
-            <h2 className="text-white font-bold mb-2 relative z-10" style={{ fontSize: '20px' }}>{safeCountry.name.common}</h2>
-            <p className="text-white/80 relative z-10 mb-2" style={{ fontSize: '14px' }}>{safeCountry.name.official}</p>
           </div>
+          {/* Small country code overlay for all flags */}
+          <div className="absolute bottom-0 right-0 bg-black/70 text-white text-xs px-1 py-0.5 rounded-tl" style={{ fontSize: '8px', fontWeight: 'bold', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
+            {getCountryCode(safeCountry.name.common).toUpperCase()}
+          </div>
+        </div>
+        {/* Country Name */}
+        <h2 className="mb-2 relative z-10" style={{ fontSize: '20px', color: '#fff', fontWeight: 700, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>{safeCountry.name.common}</h2>
+        <p className="relative z-10 mb-2" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', fontWeight: 400, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>{safeCountry.name.official}</p>
+      </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4" style={{ padding: '16px' }}>
+      <div className="flex-1 overflow-y-auto p-4" style={{ padding: '16px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
         {/* Country Information */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Capital */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <Landmark className="w-4 h-4" />
                 Capital
               </div>
-              <div className="text-blue-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-blue-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {Array.isArray(safeCountry.capital) && safeCountry.capital.length > 0 ? safeCountry.capital[0] : "N/A"}
               </div>
             </div>
 
             {/* Population */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <Users className="w-4 h-4" />
                 Population
               </div>
-              <div className="text-green-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-green-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {safeCountry.population && safeCountry.population > 0 ? safeCountry.population.toLocaleString() : "N/A"}
               </div>
             </div>
 
             {/* Area */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <MapPin className="w-4 h-4" />
                 Area
               </div>
-              <div className="text-yellow-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-yellow-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {formatArea(safeCountry.area)}
               </div>
             </div>
 
             {/* Language */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <Languages className="w-4 h-4" />
                 Language
               </div>
-              <div className="text-pink-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-pink-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {formatLanguages(safeCountry.languages)}
               </div>
             </div>
 
             {/* Region */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <Globe2 className="w-4 h-4" />
                 Region
               </div>
-              <div className="text-red-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-red-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {safeCountry.region || "N/A"}
               </div>
             </div>
 
             {/* Currency */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <DollarSign className="w-4 h-4" />
                 Currency
               </div>
-              <div className="text-yellow-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-yellow-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {formatCurrency(safeCountry.currencies)}
               </div>
             </div>
 
             {/* Timezone */}
-            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px' }}>
+            <div className="transition-all duration-300 cursor-pointer hover:-translate-y-0.5 relative overflow-hidden group" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '8px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
-              <div className="text-white/70 text-xs font-medium uppercase tracking-wider flex items-center gap-3" style={{ marginBottom: '8px' }}>
+              <div className="text-white/70 text-xs flex items-center gap-3" style={{ marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 <Clock className="w-4 h-4" />
                 Timezone
               </div>
-              <div className="text-amber-400 font-semibold" style={{ fontSize: '18px' }}>
+              <div className="text-amber-400" style={{ fontSize: '18px', fontWeight: 500, fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
                 {formatTimezones(safeCountry.timezones)}
               </div>
             </div>
@@ -423,9 +447,9 @@ export default function CountryInfo({ country, onClose }) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 pb-8 pt-2 flex-shrink-0">
+      <div className="px-6 pb-8 pt-2 flex-shrink-0" style={{ fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
         <div className="border-t pt-6 text-center" style={{ borderColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0 0 24px 24px' }}>
-          <p className="text-white/50" style={{ fontSize: '11px' }}>
+          <p className="text-white/50" style={{ fontSize: '11px', fontFamily: "'Quicksand', 'Inter', 'Segoe UI', Arial, sans-serif" }}>
             Powered by <span className="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">REST Countries API</span>
           </p>
         </div>
