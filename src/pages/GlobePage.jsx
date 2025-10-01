@@ -26,7 +26,7 @@ export default function GlobePage() {
             "📡 Attempting to fetch from REST Countries API v3.1 with field filtering..."
           );
           const response = await fetch(
-            "https://restcountries.com/v3.1/all?fields=name,population,languages,capital,region,currencies,timezones,area"
+            "https://restcountries.com/v3.1/all?fields=name,population,languages,capital,region,currencies,timezones,area,cca2,cca3"
           );
 
           if (response.ok) {
@@ -50,7 +50,42 @@ export default function GlobePage() {
             const variations = [
               country.name.common.toLowerCase(),
               country.name.official?.toLowerCase(),
+              // Add common name variations
+              country.name.common.toLowerCase().replace(/\s+/g, ' '),
+              country.name.official?.toLowerCase().replace(/\s+/g, ' '),
             ].filter(Boolean);
+
+            // Add specific variations for USA
+            if (country.name.common.toLowerCase().includes('united states')) {
+              variations.push('united states of america', 'usa', 'us');
+              console.log('🇺🇸 USA data found:', country);
+            }
+            
+            // Add specific variations for other problematic countries
+            if (country.name.common.toLowerCase().includes('eswatini')) {
+              variations.push('swaziland');
+            }
+            if (country.name.common.toLowerCase().includes('timor-leste')) {
+              variations.push('east timor', 'timor-leste');
+            }
+            if (country.name.common.toLowerCase().includes('united kingdom')) {
+              variations.push('england', 'great britain', 'britain', 'uk');
+            }
+            if (country.name.common.toLowerCase().includes('russian federation')) {
+              variations.push('russia');
+            }
+            if (country.name.common.toLowerCase().includes('people\'s republic of china')) {
+              variations.push('china');
+            }
+            if (country.name.common.toLowerCase().includes('republic of korea')) {
+              variations.push('south korea', 'korea');
+            }
+            if (country.name.common.toLowerCase().includes('democratic people\'s republic of korea')) {
+              variations.push('north korea');
+            }
+            if (country.name.common.toLowerCase().includes('united states')) {
+              variations.push('america', 'usa', 'us');
+            }
 
             variations.forEach((variation) => {
               if (variation && !countryMap.has(variation)) {
@@ -69,12 +104,70 @@ export default function GlobePage() {
           let countryData = null;
 
           const searchTerm = countryName.toLowerCase();
+          const normalizedSearchTerm = searchTerm.replace(/\s+/g, ' ').trim();
+          
           if (countryMap.has(searchTerm)) {
             countryData = countryMap.get(searchTerm);
+          } else if (countryMap.has(normalizedSearchTerm)) {
+            countryData = countryMap.get(normalizedSearchTerm);
+          } else {
+            // Try partial matching for common cases
+            for (const [key, value] of countryMap.entries()) {
+              if (key.includes(searchTerm) || searchTerm.includes(key)) {
+                countryData = value;
+                break;
+              }
+            }
           }
 
           if (!countryData) {
-            countryData = {
+            // Special handling for disputed territories and regions
+            let specialData = null;
+            if (countryName.toLowerCase().includes('west bank')) {
+              specialData = {
+                name: { common: "Palestine", official: "State of Palestine" },
+                capital: ["Ramallah"],
+                population: 5000000,
+                area: 6220,
+                region: "Asia",
+                subregion: "Western Asia",
+                currencies: { ILS: { name: "Israeli Shekel", symbol: "₪" } },
+                languages: { ara: "Arabic", heb: "Hebrew" },
+                timezones: ["UTC+02:00"],
+                cca2: "PS",
+                cca3: "PSE"
+              };
+            } else if (countryName.toLowerCase().includes('antarctica')) {
+              specialData = {
+                name: { common: "Antarctica", official: "Antarctica" },
+                capital: ["No permanent capital"],
+                population: 0,
+                area: 14000000,
+                region: "Antarctica",
+                subregion: "Antarctica",
+                currencies: {},
+                languages: {},
+                timezones: ["UTC+00:00"],
+                cca2: "AQ",
+                cca3: "ATA"
+              };
+            } else if (countryName.toLowerCase().includes('united nations') || countryName.toLowerCase().includes('un country')) {
+              specialData = {
+                name: { common: "United Nations", official: "United Nations" },
+                capital: ["New York (Headquarters)"],
+                population: 0,
+                area: 0,
+                region: "International Organization",
+                subregion: "Global",
+                currencies: {},
+                languages: { eng: "English", fra: "French", spa: "Spanish", rus: "Russian", ara: "Arabic", zho: "Chinese" },
+                timezones: ["UTC-05:00"],
+                cca2: "UN",
+                cca3: "UNO"
+              };
+            }
+            
+            countryData = specialData || {
               name: {
                 common: countryName,
                 official: countryName,
@@ -83,9 +176,12 @@ export default function GlobePage() {
               population: 0,
               area: 0,
               region: "N/A",
+              subregion: "N/A",
               currencies: {},
               languages: {},
               timezones: [],
+              cca2: "XX",
+              cca3: "XXX"
             };
           }
 
@@ -100,6 +196,63 @@ export default function GlobePage() {
         });
 
         setCountries({ features });
+        
+        // Comprehensive country data validation
+        console.log('🔍 Validating country data...');
+        const validationResults = features.map(feature => {
+          const countryData = feature.properties.countryData;
+          const hasValidData = countryData && 
+            countryData.name && 
+            countryData.name.common && 
+            countryData.capital && 
+            countryData.population > 0;
+          
+          // Check for specific data quality issues
+          const issues = [];
+          if (!countryData) issues.push('No country data');
+          if (!countryData?.name?.common) issues.push('Missing country name');
+          
+          // Special handling for Antarctica and other non-countries
+          const isAntarctica = countryData?.name?.common?.toLowerCase().includes('antarctica');
+          const isUnitedNations = countryData?.name?.common?.toLowerCase().includes('united nations');
+          const isSpecialTerritory = isAntarctica || isUnitedNations;
+          
+          if (!isSpecialTerritory) {
+            if (!countryData?.capital || countryData.capital.length === 0) issues.push('Missing capital');
+            if (!countryData?.population || countryData.population === 0) issues.push('Missing population');
+            if (!countryData?.region || countryData.region === 'N/A') issues.push('Missing region');
+            if (!countryData?.languages || Object.keys(countryData.languages).length === 0) issues.push('Missing languages');
+            if (!countryData?.currencies || Object.keys(countryData.currencies).length === 0) issues.push('Missing currencies');
+          }
+          
+          if (issues.length > 0) {
+            console.warn(`⚠️ Issues for ${feature.properties.name}:`, issues.join(', '));
+          }
+          
+          return {
+            name: feature.properties.name,
+            hasValidData,
+            issues,
+            data: countryData
+          };
+        });
+        
+        const validCountries = validationResults.filter(r => r.hasValidData).length;
+        const totalCountries = validationResults.length;
+        const countriesWithIssues = validationResults.filter(r => r.issues.length > 0);
+        
+        console.log(`✅ Data validation: ${validCountries}/${totalCountries} countries have complete data`);
+        console.log(`⚠️ Countries with issues: ${countriesWithIssues.length}`);
+        
+        // Log major countries status
+        const majorCountries = ['United States', 'China', 'India', 'Brazil', 'Russia', 'United Kingdom', 'France', 'Germany', 'Japan'];
+        majorCountries.forEach(countryName => {
+          const result = validationResults.find(r => r.name === countryName);
+          if (result) {
+            console.log(`🌍 ${countryName}: ${result.hasValidData ? '✅ Complete' : '❌ Issues: ' + result.issues.join(', ')}`);
+          }
+        });
+        
         setLoading(false);
       } catch (error) {
         console.error("Error processing data:", error);
@@ -111,6 +264,7 @@ export default function GlobePage() {
   }, []);
 
   const handleCountryClick = (countryData) => {
+    console.log('🌍 Country clicked:', countryData);
     console.log("=== COUNTRY CLICKED ===");
     console.log("Country name:", countryData?.name?.common);
     setSelectedCountry(countryData);
@@ -150,10 +304,18 @@ export default function GlobePage() {
         }
       }}
     >
-      {/* Floating Back button */}
-      <div className="absolute top-4 left-4 z-50 pointer-events-auto">
-  <Link to="/" className="btn-arcade">Back to Home</Link>
-</div>
+      {/* Back button with proper margins */}
+      <div className="absolute z-[9999] top-4 left-4">
+        <Link 
+          to="/" 
+          className="btn-arcade"
+          style={{
+            margin: "20px",
+          }}
+        >
+          Back to Home
+        </Link>
+      </div>
 
       {/* Globe Container */}
       <div

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import Globe from "react-globe.gl";
 
-const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgroundClick }) => {
+const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgroundClick, disableHover = false, hoverHighlightOnly = false }) => {
   const globeRef = useRef();
   const [hoveredCountry, setHoveredCountry] = useState(null);
   const [hoverLabel, setHoverLabel] = useState(null); // { name, x, y }
@@ -11,69 +11,42 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
   const isCountryMatch = (polygonName, countryName) => {
     if (!polygonName || !countryName) return false;
     
-    const polyLower = polygonName.toLowerCase();
-    const countryLower = countryName.toLowerCase();
+    const polyLower = polygonName.toLowerCase().trim();
+    const countryLower = countryName.toLowerCase().trim();
     
     // Direct match
     if (polyLower === countryLower) {
-      console.log('✅ Direct match:', polygonName, '===', countryName);
-      return true;
-    }
-    
-    // Handle special cases
-    const specialCases = {
-      'united states of america': 'united states',
-      'united states': 'united states of america',
-      'usa': 'united states',
-      'america': 'united states',
-      'democratic republic of the congo': 'dr congo',
-      'dr congo': 'democratic republic of the congo',
-      'drc': 'democratic republic of the congo',
-      'republic of the congo': 'congo',
-      'congo': 'republic of the congo',
-      'united kingdom': 'uk',
-      'uk': 'united kingdom',
-      'britain': 'united kingdom',
-      'south korea': 'korea',
-      'korea': 'south korea',
-      'north korea': 'korea, democratic people\'s republic of',
-      'korea, democratic people\'s republic of': 'north korea',
-      'czech republic': 'czechia',
-      'czechia': 'czech republic',
-      'ivory coast': 'côte d\'ivoire',
-      'côte d\'ivoire': 'ivory coast',
-      'cape verde': 'cabo verde',
-      'cabo verde': 'cape verde',
-      'east timor': 'timor-leste',
-      'timor-leste': 'east timor',
-      'swaziland': 'eswatini',
-      'eswatini': 'swaziland',
-      'macedonia': 'north macedonia',
-      'north macedonia': 'macedonia',
-      'myanmar': 'burma',
-      'burma': 'myanmar'
-    };
-    
-    // Check special cases
-    if (specialCases[polyLower] === countryLower || specialCases[countryLower] === polyLower) {
-      console.log('✅ Special case match:', polygonName, '===', countryName);
       return true;
     }
     
     // Check if one contains the other (for partial matches)
     if (polyLower.includes(countryLower) || countryLower.includes(polyLower)) {
-      console.log('✅ Contains match:', polygonName, 'contains', countryName);
       return true;
     }
     
-    // Check for "United States" variations
-    if ((polyLower.includes('united states') || polyLower.includes('usa') || polyLower.includes('america')) &&
-        (countryLower.includes('united states') || countryLower.includes('usa') || countryLower.includes('america'))) {
-      console.log('✅ USA variation match:', polygonName, '===', countryName);
-      return true;
+    // Special cases for common mismatches
+    const specialMatches = [
+      ['united states', 'usa', 'america', 'united states of america'],
+      ['united kingdom', 'uk', 'britain', 'england', 'great britain'],
+      ['south korea', 'korea', 'republic of korea'],
+      ['north korea', 'democratic people\'s republic of korea'],
+      ['czech republic', 'czechia'],
+      ['east timor', 'timor-leste'],
+      ['swaziland', 'eswatini'],
+      ['macedonia', 'north macedonia'],
+      ['myanmar', 'burma'],
+      ['congo', 'republic of the congo'],
+      ['democratic republic of the congo', 'dr congo', 'drc'],
+      ['ivory coast', 'côte d\'ivoire'],
+      ['cape verde', 'cabo verde']
+    ];
+    
+    for (const group of specialMatches) {
+      if (group.includes(polyLower) && group.includes(countryLower)) {
+        return true;
+      }
     }
     
-    console.log('❌ No match found:', polygonName, 'vs', countryName);
     return false;
   };
 
@@ -109,8 +82,8 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-    // eslint-disable-next-line
   }, [hoveredCountry]);
+
 
   return (
     <div style={{position: 'relative', width: '100vw', height: '100vh'}}>
@@ -121,36 +94,36 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
         polygonsData={countries.features}
         polygonAltitude={(d) => {
           if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-            return 0.15;
+            return 0.2;
           }
-          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-            return 0.01;
+          if (!disableHover && hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return 0.05;
           }
-          return 0.005;
+          return 0.01;
         }}
         polygonCapColor={(d) => {
           if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-            return "rgba(255, 215, 0, 0.9)";
+            return "rgba(255, 215, 0, 1.0)";
           }
-          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-            return "rgba(255, 165, 0, 0.6)";
+          if (!disableHover && hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return "rgba(255, 165, 0, 0.8)";
           }
-          return "rgba(0, 150, 255, 0.2)";
+          return "rgba(0, 150, 255, 0.3)";
         }}
         polygonSideColor={(d) => {
           if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
-            return "rgba(255, 215, 0, 0.5)";
+            return "rgba(255, 215, 0, 0.7)";
           }
-          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
-            return "rgba(255, 165, 0, 0.3)";
+          if (!disableHover && hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+            return "rgba(255, 165, 0, 0.5)";
           }
-          return "rgba(0, 150, 255, 0.1)";
+          return "rgba(0, 150, 255, 0.2)";
         }}
         polygonStrokeColor={(d) => {
           if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
             return "rgba(255, 215, 0, 1)";
           }
-          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+          if (!disableHover && hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
             return "rgba(255, 165, 0, 1)";
           }
           return "rgba(255, 255, 255, 1)";
@@ -159,7 +132,7 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
           if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
             return 8;
           }
-          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+          if (!disableHover && hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
             return 5;
           }
           return 2;
@@ -168,28 +141,29 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
           if (selectedCountry && isCountryMatch(d.properties?.name, selectedCountry.name.common)) {
             return 0.15;
           }
-          if (hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
+          if (!disableHover && hoveredCountry && isCountryMatch(d.properties?.name, hoveredCountry)) {
             return 0.08;
           }
           return 0.005;
         }}
         onPolygonClick={(polygon) => {
-          // When a country is clicked, clear hover state so label disappears
+          // When a country is clicked, clear hover state
           setHoveredCountry(null);
-          setHoverLabel(null);
           if (polygon?.properties?.countryData) {
             onCountryClick(polygon.properties.countryData);
           }
         }}
-        onGlobeReady={() => {
-          // Globe is ready
-        }}
-        onPolygonHover={(polygon) => {
-          if (polygon?.properties?.name) {
+        onPolygonHover={!disableHover ? (polygon) => {
+          if (polygon?.properties?.countryData?.name?.common) {
+            setHoveredCountry(polygon.properties.countryData.name.common);
+          } else if (polygon?.properties?.name) {
             setHoveredCountry(polygon.properties.name);
           } else {
             setHoveredCountry(null);
           }
+        } : undefined}
+        onGlobeReady={() => {
+          // Globe is ready
         }}
         polygonsTransitionDuration={300}
         width={window.innerWidth}
@@ -199,8 +173,9 @@ const InteractiveGlobe = ({ onCountryClick, countries, selectedCountry, onBackgr
         showPolygonStroke={true}
         showPolygonCap={true}
       />
+      
       {/* Floating country label */}
-      {hoverLabel && (
+      {!disableHover && !hoverHighlightOnly && hoverLabel && (
         <div
           style={{
             position: 'absolute',
